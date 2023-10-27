@@ -93,7 +93,7 @@ spec:
         - "chown 1001:1001 /data"
         volumeMounts:
         - name: data-vol
-          mountPath: /data        
+          mountPath: /data
       containers:
       - name: minio-container
         image: bitnami/minio:2023.10.25
@@ -109,11 +109,6 @@ spec:
             name: minio-cm
         - secretRef:
             name: minio-secret
-        ports:
-        - name: minio-data
-          containerPort: 9000
-        - name: minio-console
-          containerPort: 9090
         readinessProbe:
           httpGet:
             path: /minio/health/live
@@ -130,9 +125,14 @@ spec:
           successThreshold: 1
           failureThreshold: 3
           timeoutSeconds: 5
+        ports:
+        - name: minio-data
+          containerPort: 9000
+        - name: minio-console
+          containerPort: 9090
         volumeMounts:
         - name: data-vol
-          mountPath: /data        
+          mountPath: /data
 ---
 apiVersion: v1
 kind: Service
@@ -178,7 +178,7 @@ spec:
           service:
             name: minio-svc
             port:
-              name: minio-data            
+              name: minio-data
   - host: console-188.166.204.182.nip.io ## get  External IP from kubectl get svc -ningress-nginx
     http:
       paths:
